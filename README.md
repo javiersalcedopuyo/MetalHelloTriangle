@@ -1,3 +1,3 @@
 # MetalHelloTriangle
 
-A description of this package.
+Code example for my tutorial "Metal HelloTriangle using Swift 5 and no Xcode"
