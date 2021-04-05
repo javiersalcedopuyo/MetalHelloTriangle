@@ -2,9 +2,15 @@ import MetalKit
 
 let VERTEX_DATA: [SIMD3<Float>] =
 [
-    [ 0.0,  1.0, 0.0],
+    // v0
+    [ 0.0,  1.0, 0.0], // position
+    [ 1.0,  0.0, 0.0], // color
+    // v1
     [-1.0, -1.0, 0.0],
-    [ 1.0, -1.0, 0.0]
+    [ 0.0,  1.0, 0.0],
+    // v2
+    [ 1.0, -1.0, 0.0],
+    [ 0.0,  0.0, 1.0]
 ]
 
 let SHADERS_DIR_LOCAL_PATH        = "/Sources/Shaders"
@@ -42,7 +48,10 @@ class Renderer : NSObject
         vertDesc.attributes[0].format      = .float3
         vertDesc.attributes[0].bufferIndex = 0
         vertDesc.attributes[0].offset      = 0
-        vertDesc.layouts[0].stride         = MemoryLayout<SIMD3<Float>>.stride
+        vertDesc.attributes[1].format      = .float3
+        vertDesc.attributes[1].bufferIndex = 0
+        vertDesc.attributes[1].offset      = MemoryLayout<SIMD3<Float>>.stride
+        vertDesc.layouts[0].stride         = MemoryLayout<SIMD3<Float>>.stride * 2
 
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
         pipelineDescriptor.colorAttachments[0].pixelFormat = mView.colorPixelFormat
@@ -70,7 +79,6 @@ class Renderer : NSObject
         let commandBuffer  = mCommandQueue.makeCommandBuffer()!
 
         let commandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: mView.currentRenderPassDescriptor!)
-        //commandEncoder?.setViewport(self.viewport)
         commandEncoder?.setRenderPipelineState(mPipeline)
         commandEncoder?.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         commandEncoder?.drawPrimitives(type: .triangle,
